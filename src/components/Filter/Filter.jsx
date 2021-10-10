@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+
 import styles from './Filter.module.scss';
 
 // Принимает значение с поля фильтра и метод пишущий в стейт
@@ -9,6 +10,7 @@ const Filter = ({ value, onChange }) => {
       <input
         type="text"
         name="filter"
+        placeholder="Find..."
         className={styles.input}
         value={value}
         onChange={onChange}

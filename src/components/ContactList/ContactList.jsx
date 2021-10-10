@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import ContactItem from '../ContactItem';
-
 import styles from './ContactList.module.scss';
 
 // Принимает все контакты и пробрасывает дальше метод для удаления контакта
@@ -8,11 +7,14 @@ const ContactList = ({ contacts, onDeleteContact }) => {
   return (
     <ul className={styles.list}>
       {contacts.map(contact => (
-        <ContactItem
-          contact={contact}
-          onDeleteContact={onDeleteContact}
-          key={contact.id}
-        />
+        <li className={styles.item} key={contact.id}>
+          <ContactItem
+            contact={contact}
+            onDeleteContact={() => {
+              onDeleteContact(contact.id); // Метод на клике, принимает ID контакта
+            }}
+          />
+        </li>
       ))}
     </ul>
   );

@@ -1,6 +1,5 @@
-import { Component } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { v4 as uuidv4 } from 'uuid';
 
 import styles from './ContactForm.module.scss';
 
@@ -29,13 +28,7 @@ class ContactForm extends Component {
   hanldeSubmit = event => {
     event.preventDefault();
 
-    const contact = {
-      id: uuidv4(),
-      name: this.state.name,
-      number: this.state.number,
-    };
-
-    this.props.onSubmit(contact); // Внешний метод в пропсах класса
+     this.props.onSubmit(this.state); // Внешний метод в пропсах класса
 
     this.resetForm();
   };
@@ -57,6 +50,8 @@ class ContactForm extends Component {
           <input
             type="text"
             name="name"
+            placeholder="Contact name"
+            aria-label="Input for your name"
             className={styles.input}
             value={this.state.name} // Пишем значение в стейт
             onChange={this.hanldeChange} // Наблюдающий метод
@@ -70,6 +65,8 @@ class ContactForm extends Component {
           <input
             type="tel"
             name="number"
+            placeholder="Phone number"
+            aria-label="Input for your phone number"
             className={styles.input}
             value={this.state.number} // Пишем значение в стейт
             onChange={this.hanldeChange} // Наблюдающий метод
