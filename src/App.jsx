@@ -16,8 +16,40 @@ class App extends Component {
     filter: '',
   };
 
-  // Добавляет контакт (желательно сократить или вынести)
-  addContact = newContact => {
+   // Вызывается один раз при маунте!
+   componentDidMount() {
+    // Cчитывает при маунте локальное и записывает в стейт
+    const contacts = localStorage.getItem('contacts');
+    const parsedContacts = JSON.parse(contacts);
+
+    if (parsedContacts) {
+      this.setState({ contacts: parsedContacts });
+    }
+  }
+
+  // Вызывается после каждого обновления!
+  componentDidUpdate(prevProps, prevState) {
+    const nextContacts = this.state.contacts;
+    const prevContacts = prevState.contacts;
+
+    // Сравнивает стейты, и если не равны, тогда пишет в локальное
+    if (nextContacts !== prevContacts) {
+      localStorage.setItem('contacts', JSON.stringify(nextContacts));
+    }
+  }
+
+  // Добавляет контакт
+  addContact = data => {
+    const normalizedName = data.name.toLowerCase();
+    const uniqId = Date.now().toString();
+
+    // Создает новый контакт с ID из даты
+    const newContact = {
+      id: uniqId,
+      name: normalizedName,
+      number: data.number,
+    };
+
     // Проверка на дубликат
     const duplicateName = this.state.contacts.find(
       contact => contact.name === newContact.name,
@@ -51,9 +83,13 @@ class App extends Component {
 
   // Удаляет контакт
   deleteContact = id => {
-    this.setState(prevState => ({
-      contacts: prevState.contacts.filter(contact => contact.id !== id),
-    }));
+    const answer = window.confirm('Want to delete?');
+
+    if (answer) {
+      this.setState(prevState => ({
+        contacts: prevState.contacts.filter(contact => contact.id !== id),
+      }));
+    }
   };
 
   render() {
@@ -64,8 +100,10 @@ class App extends Component {
       <Container>
         <h1 className={styles.title}>Phonebook</h1>
         <ContactForm onSubmit={this.addContact} />
+
         <h2 className={styles.title}>Contacts</h2>
         <Filter value={filter} onChange={this.changeFilter} />
+
         <ContactList
           contacts={filteredResults}
           onDeleteContact={this.deleteContact}
